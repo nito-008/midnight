@@ -28,3 +28,9 @@ pub struct NoteBundle {
     start_time: StartTime,
     note: Note,
 }
+
+pub struct NotePlugin;
+
+impl Plugin for NotePlugin {
+    fn build(&self, app: &mut App) {}
+}

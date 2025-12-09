@@ -33,3 +33,8 @@ impl Tempo {
         self.secs = 60.0 / bpm;
     }
 }
+
+fn get_delta_secs(timing_unit: f64, delta_time: f64, tempo_secs: f64) -> f64 {
+    let delta = delta_time / timing_unit * tempo_secs;
+    delta
+}

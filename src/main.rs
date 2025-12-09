@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+
 /*
 use midly::TrackEvent;
 use midly::{MetaMessage, MidiMessage, Smf, Timing, TrackEventKind};
@@ -8,7 +9,9 @@ use std::str;
 
 mod display;
 mod player;
-mod smf;
+use midnight::core::{
+    debug::DebugPlugin, main_window::MainWindowPlugin, playback::PlaybackPlugin, smf,
+};
 
 /*
 use display::{ChannelText, TempoText};
@@ -20,28 +23,15 @@ use crate::player::PlaybackState;
 */
 
 fn main() {
+    let parsed_smf_data = smf::parse_smf_file("test.mid").expect("failed to parse midi file");
+
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, setup)
-        /*
-        .insert_resource(Tempo::from_bpm(120.0))
-        .insert_resource(Playback::new())
-        .add_systems(
-            Update,
-            (
-                update_midi_events,
-                update_key_events,
-                update_channel_text,
-                update_tempo_text,
-                update_playback_state_text,
-            )
-                .chain(),
-        ) */
+        .add_plugins(MainWindowPlugin)
+        .add_plugins(PlaybackPlugin)
+        .add_plugins(DebugPlugin)
+        .insert_resource(parsed_smf_data)
         .run();
-}
-
-fn setup(mut commands: Commands) {
-    commands.spawn(Camera2d);
 }
 
 /* TODO 本当に可読性が低いのでファイルを分ける
