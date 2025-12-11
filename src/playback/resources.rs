@@ -1,15 +1,14 @@
+use bevy::prelude::*;
 use std::fmt;
-
-use bevy::ecs::resource::Resource;
 
 #[derive(Resource)]
 pub struct Playback {
-    secs: f64,
+    ticks: u32,
     state: PlaybackState,
 }
 
 #[derive(Clone, Copy, PartialEq)]
-pub enum PlaybackState {
+enum PlaybackState {
     Stopped,
     Playing,
     Paused,
@@ -18,13 +17,13 @@ pub enum PlaybackState {
 impl Playback {
     pub fn new() -> Self {
         Self {
-            secs: 0.,
+            ticks: 0,
             state: PlaybackState::Stopped,
         }
     }
 
-    pub fn secs(&self) -> f64 {
-        self.secs
+    pub fn ticks(&self) -> u32 {
+        self.ticks
     }
 
     pub fn state(&self) -> PlaybackState {
@@ -32,7 +31,7 @@ impl Playback {
     }
 
     pub fn stop(&mut self) {
-        self.secs = 0.;
+        self.ticks = 0;
         self.state = PlaybackState::Stopped;
     }
 
@@ -44,14 +43,20 @@ impl Playback {
         self.state = PlaybackState::Playing;
     }
 
-    pub fn add_secs(&mut self, delta_secs: f64) {
-        self.secs += delta_secs;
+    pub fn add_ticks(&mut self, delta_ticks: u32) {
+        self.ticks += delta_ticks;
     }
 
     pub fn is_playing(&self) -> bool {
-        match self.state {
-            PlaybackState::Playing => true,
-            _ => false,
+        matches!(self.state, PlaybackState::Playing)
+    }
+}
+
+impl Default for Playback {
+    fn default() -> Self {
+        Self {
+            ticks: 0,
+            state: PlaybackState::Stopped,
         }
     }
 }

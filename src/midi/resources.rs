@@ -1,4 +1,23 @@
 use bevy::prelude::*;
+use midly::TrackEventKind;
+
+pub struct MIDIEvent {
+    pub elapsed_ticks: u32,
+    pub kind: TrackEventKind<'static>,
+}
+
+pub struct MIDITrack {
+    pub events: Vec<MIDIEvent>,
+    pub number: u8,
+    pub delta_secs: f64,
+    pub next_event_index: u32,
+}
+
+#[derive(Resource)]
+pub struct MIDISequence {
+    pub tracks: Vec<MIDITrack>,
+    pub timing_unit: f64,
+}
 
 #[derive(Resource)]
 pub struct Tempo {
@@ -21,7 +40,7 @@ impl Tempo {
 
     pub fn set_secs(&mut self, secs: f64) {
         self.secs = secs;
-        println!("Tempo(secs): {}", secs);
+        println!("Tempo(secs): {secs}");
         println!("Tempo(bpm): {}", self.bpm());
     }
 
@@ -32,9 +51,4 @@ impl Tempo {
     pub fn set_bpm(&mut self, bpm: f64) {
         self.secs = 60.0 / bpm;
     }
-}
-
-fn get_delta_secs(timing_unit: f64, delta_time: f64, tempo_secs: f64) -> f64 {
-    let delta = delta_time / timing_unit * tempo_secs;
-    delta
 }
