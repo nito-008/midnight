@@ -1,16 +1,15 @@
-use bevy::prelude::*;
-
 pub mod resources;
 
-use crate::midi::resources::{MIDISequence, Tempo};
+use bevy::prelude::*;
 
-use self::resources::Playback;
+use crate::midi::resources::{MIDISequence, Tempo};
+use crate::playback::resources::Playback;
 
 pub struct PlaybackPlugin;
 
 impl Plugin for PlaybackPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Playback::default())
+        app.insert_resource(Playback::new())
             .add_systems(Update, (update_keyboard_event, update_ticks));
     }
 }

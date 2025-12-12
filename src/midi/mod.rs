@@ -1,4 +1,3 @@
-pub mod components;
 pub mod midi_parser;
 pub mod resources;
 
@@ -17,6 +16,7 @@ impl Plugin for MidiPlugin {
         let midi_sequence =
             midi_parser::parse_smf_file("test.mid").expect("failed to parse midi file");
         let tempo = Tempo::from_bpm(120.);
+
         app.insert_resource(midi_sequence)
             .insert_resource(tempo)
             .add_systems(Update, update_midi_events);
@@ -65,19 +65,19 @@ fn on_track_event(event: &MIDIEvent, tempo: &mut ResMut<Tempo>) {
                 MidiMessage::NoteOff { key, vel } => {
                     debug!("OFF {} Vel {}", key, vel);
                 }
-                MidiMessage::ProgramChange { program } => {
+                MidiMessage::ProgramChange { .. } => {
                     debug!("Program Change");
                 }
-                MidiMessage::Aftertouch { key, vel } => {
+                MidiMessage::Aftertouch { key, .. } => {
                     debug!("Aftertouch {}", key);
                 }
-                MidiMessage::ChannelAftertouch { vel } => {
+                MidiMessage::ChannelAftertouch { .. } => {
                     debug!("ChannelAftertouch");
                 }
                 MidiMessage::Controller { controller, value } => {
                     debug!("Controller {} {}", controller, value);
                 }
-                MidiMessage::PitchBend { bend } => {
+                MidiMessage::PitchBend { .. } => {
                     debug!("PitchBend");
                 }
             }
@@ -86,7 +86,7 @@ fn on_track_event(event: &MIDIEvent, tempo: &mut ResMut<Tempo>) {
             MetaMessage::Tempo(tempo_micros) => {
                 tempo.set_secs(tempo_micros.as_int() as f64 / 1000000.0);
             }
-            MetaMessage::TrackName(track_name) => {}
+            MetaMessage::TrackName(_) => {}
             _ => {
                 debug!("MetaMessage");
             }

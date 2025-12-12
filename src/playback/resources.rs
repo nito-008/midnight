@@ -8,7 +8,7 @@ pub struct Playback {
 }
 
 #[derive(Clone, Copy, PartialEq)]
-enum PlaybackState {
+pub enum PlaybackState {
     Stopped,
     Playing,
     Paused,
@@ -49,15 +49,6 @@ impl Playback {
 
     pub fn is_playing(&self) -> bool {
         matches!(self.state, PlaybackState::Playing)
-    }
-}
-
-impl Default for Playback {
-    fn default() -> Self {
-        Self {
-            ticks: 0,
-            state: PlaybackState::Stopped,
-        }
     }
 }
 
